@@ -385,6 +385,23 @@ commands:
           name: "Waiting on Circle CI jobs: <<parameters.job-names>>"
           command: node ./scripts/wait-on-circle-jobs.js --job-names="<<parameters.job-names>>"
 
+  check-halt-binary:
+    description: Halt CI if binary is unchanged
+    steps:
+      - run:
+          name: Check if binary is changed
+          command: node scripts/check-halt.js || circleci-agent step halt
+
+  check-halt-package:
+    description: Halt CI if binary is unchanged
+    parameters:
+      package:
+        type: string
+    steps:
+      - run:
+          name: Check if package or binary is changed
+          command: node scripts/check-halt.js << parameters.package >> || circleci-agent step halt
+
 jobs:
   ## code checkout and yarn installs
   build:
@@ -1000,6 +1017,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - check-halt-package:
+          package: "@cypress/webpack-preprocessor"
       - run:
           name: Build
           command: yarn workspace @cypress/webpack-preprocessor build
@@ -1038,6 +1057,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - check-halt-package:
+          package: "@cypress/webpack-preprocessor"
       - run:
           name: Build
           command: yarn workspace @cypress/webpack-preprocessor build
