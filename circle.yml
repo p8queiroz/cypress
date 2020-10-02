@@ -474,6 +474,7 @@ jobs:
           root: ~/
           paths:
             - cypress
+            - .ssh
 
   lint:
     <<: *defaults

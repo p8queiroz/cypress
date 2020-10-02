@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const execa = require('execa')
-const fs = require('fs')
 const got = require('got')
 const argv = require('minimist')(process.argv.slice(2))
 
@@ -10,11 +9,6 @@ const pack = argv._[0]
 
 const containsBinary = (changes) => {
   return !!changes.find((name) => name === 'cypress' || name.includes('@packages'))
-}
-
-const verifySSH = async () => {
-  await execa('mkdir', ['-p', '~/.ssh'])
-  fs.writeFileSync('~/.ssh/config', 'Host github.com\n\tStrictHostKeyChecking no\n')
 }
 
 const getPRBase = async () => {
@@ -61,8 +55,6 @@ const findBase = async (currentBranch) => {
 }
 
 const main = async () => {
-  verifySSH()
-
   const { stdout: currentBranch } = await execa('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 
   if (currentBranch === 'develop' || currentBranch === 'master') {
