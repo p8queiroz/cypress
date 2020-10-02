@@ -390,7 +390,7 @@ commands:
     steps:
       - run:
           name: Check if binary is changed
-          command: node scripts/check-halt.js || circleci-agent step halt
+          command: yarn check-halt || circleci-agent step halt
 
   check-halt-package:
     description: Halt CI if binary is unchanged
@@ -400,7 +400,7 @@ commands:
     steps:
       - run:
           name: Check if package or binary is changed
-          command: node scripts/check-halt.js << parameters.package >> || circleci-agent step halt
+          command: yarn check-halt << parameters.package >> || circleci-agent step halt
 
 jobs:
   ## code checkout and yarn installs
